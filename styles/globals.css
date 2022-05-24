@@ -7,3 +7,8 @@
     @apply bg-gray-200;
   }
 }
+@layer components {
+  .icon {
+    @apply h-9 w-6 cursor-pointer rounded-md lg:w-9 lg:p-1 lg:hover:bg-gray-100;
+  }
+}
