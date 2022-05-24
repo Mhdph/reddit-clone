@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { auth } from "../firebase/clientApp";
 
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithGithub,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 
 function register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [signInWithGithub] = useSignInWithGithub(auth);
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
@@ -32,28 +38,28 @@ function register() {
   return (
     <form onSubmit={onSubmit} className="flex flex-row">
       <img
-        className="h-[100vh] w-[142px]"
+        className="h-[100vh] w-16 md:w-36 lg:w-[142px]"
         src="https://www.redditstatic.com/accountmanager/bbb584033aa89e39bad69436c504c9bd.png"
         alt=""
       />
       <div className="w-full ml-6 mt-56">
         <h1 className="text-[18px] font-medium">Sign up</h1>
-        <p className="mt-2 text-xs font-medium w-[18%]">
+        <p className="mt-2 text-xs font-medium lg:w-[18%]">
           By continuing, you are setting up a Reddit <br /> account and agree to
           our
           <span className="text-blue-400"> User Agreement</span> and <br />
           <span className="text-blue-400"> Privacy Policy</span>.
         </p>
 
-        <div className="mt-16 w-[18%]">
+        <div className="mt-16 w-[80%] md:w-[60%] lg:w-[40%] xl:w-[30%] 2xl:w-[18%]">
           <div className="flex mb-3">
             <input type="checkbox" />
             <p className="text-xs ml-2">
-              {" "}
-              I agree to get emails about cool stuff on Reddit{" "}
+              I agree to get emails about cool stuff on Reddit
             </p>
           </div>
           <button
+            onClick={() => signInWithGoogle()}
             aria-label="Continue with google"
             role="button"
             className="focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border  rounded border-blue-600 hover:bg-blue-500  flex items-center w-full"
@@ -63,11 +69,12 @@ function register() {
               src="https://tuk-cdn.s3.amazonaws.com/can-uploader/sign_in-svg2.svg"
               alt="google"
             />
-            <p className="text-base font-semibold ml-8 tracking-wider hover:text-white text-blue-600">
+            <p className="text-sm sm:text-base font-semibold ml-8 tracking-wider hover:text-white text-blue-600">
               Continue with Google
             </p>
           </button>
           <button
+            onClick={() => signInWithGithub()}
             aria-label="Continue with github"
             role="button"
             className="focus:outline-none  focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded border-blue-600 hover:bg-blue-500 flex items-center w-full mt-4"
@@ -76,7 +83,7 @@ function register() {
               src="https://tuk-cdn.s3.amazonaws.com/can-uploader/sign_in-svg3.svg"
               alt="github"
             />
-            <p className="text-base font-semibold ml-8 hover:text-white tracking-wider text-blue-600">
+            <p className="text-sm sm:text-base font-semibold ml-8 hover:text-white tracking-wider text-blue-600">
               Continue with Github
             </p>
           </button>
