@@ -9,6 +9,6 @@
 }
 @layer components {
   .icon {
-    @apply h-9 w-6 cursor-pointer rounded-md lg:w-9 lg:p-1 lg:hover:bg-gray-100;
+    @apply h-9 w-6 cursor-pointer rounded-full bg-gray-100 lg:w-9 lg:p-1 lg:hover:bg-gray-200;
   }
 }
