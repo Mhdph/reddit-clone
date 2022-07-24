@@ -15,7 +15,6 @@ export const Button: ComponentStyleConfig = {
     },
     md: {
       fontSize: "10pt",
-      // height: "28px",
     },
   },
   variants: {
