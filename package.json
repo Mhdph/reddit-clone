@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.2.4",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@fontsource/open-sans": "^4.5.10",
+    "@fontsource/raleway": "^4.5.9",
     "@heroicons/react": "^1.0.6",
     "firebase": "^9.8.1",
     "framer-motion": "^6.3.3",
