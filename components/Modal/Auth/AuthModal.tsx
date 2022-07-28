@@ -1,25 +1,27 @@
 import {
-  Button,
   Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
+import { auth } from "../../../firebase/clientApp";
 import AuthInput from "./AuthInput";
+import ForgotPassword from "./ForgotPassword";
 import OAouthButton from "./OAouthButton";
 
 type AuthModalProps = {};
 
 const AuthModal: React.FC<AuthModalProps> = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
+  const [user, error, loading] = useAuthState(auth);
 
   const handleClose = () => {
     setModalState((prev) => ({
@@ -27,6 +29,10 @@ const AuthModal: React.FC<AuthModalProps> = () => {
       open: false,
     }));
   };
+
+  useEffect(() => {
+    if (user) handleClose();
+  }, [user]);
 
   return (
     <>
@@ -52,11 +58,17 @@ const AuthModal: React.FC<AuthModalProps> = () => {
               justify="center"
               width="70%"
             >
-              <OAouthButton />
-              <Text color="gray.400" fontWeight={700}>
-                OR
-              </Text>
-              <AuthInput />
+              {modalState.view === "login" || modalState.view === "Sign Up" ? (
+                <>
+                  <OAouthButton />
+                  <Text color="gray.400" fontWeight={700}>
+                    OR
+                  </Text>
+                  <AuthInput />
+                </>
+              ) : (
+                <ForgotPassword />
+              )}
             </Flex>
           </ModalBody>
         </ModalContent>
