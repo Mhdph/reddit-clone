@@ -23,6 +23,13 @@ const AuthModal: React.FC<AuthModalProps> = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
   const [user, error, loading] = useAuthState(auth);
 
+  const toggleView = (view: string) => {
+    setModalState({
+      ...modalState,
+      view: view as typeof modalState.view,
+    });
+  };
+
   const handleClose = () => {
     setModalState((prev) => ({
       ...prev,
@@ -67,7 +74,7 @@ const AuthModal: React.FC<AuthModalProps> = () => {
                   <AuthInput />
                 </>
               ) : (
-                <ForgotPassword />
+                <ForgotPassword toggleView={toggleView} />
               )}
             </Flex>
           </ModalBody>
