@@ -1,12 +1,13 @@
-import { Button, Flex } from "@chakra-ui/react";
-import { signOut, User } from "firebase/auth";
+import { Flex } from "@chakra-ui/react";
+import { User } from "firebase/auth";
 import React from "react";
-import { auth } from "../../../firebase/clientApp";
 import AuthModal from "../../Modal/Auth/AuthModal";
 import AuthButtons from "./AuthButtons";
+import ActionIcons from "./Icons";
+import UserMenu from "./UserMenu";
 
 type ReightContentProps = {
-  user?: User;
+  user?: User | null;
 };
 
 const ReightContent: React.FC<ReightContentProps> = ({ user }) => {
@@ -14,11 +15,8 @@ const ReightContent: React.FC<ReightContentProps> = ({ user }) => {
     <>
       <AuthModal />
       <Flex justify="center" align="center">
-        {user ? (
-          <Button onClick={() => signOut(auth)}>Logout</Button>
-        ) : (
-          <AuthButtons />
-        )}
+        {user ? <ActionIcons /> : <AuthButtons />}
+        <UserMenu user={user} />
       </Flex>
     </>
   );
