@@ -17,8 +17,10 @@ import {
 } from "@chakra-ui/react";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
-
 import React, { useState } from "react";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { auth, firestore } from "../../../firebase/clientApp";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type CreateCommunityModalProps = {
   open: boolean;
@@ -29,10 +31,11 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   handleClose,
 }) => {
+  const [user] = useAuthState(auth);
   const [communityname, setCommunityname] = useState("");
   const [charsRemaining, setCharsRemaining] = useState(21);
   const [communityType, SetCommunityType] = useState("public");
-
+  const [error, setEroor] = useState("");
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value) setCommunityname(event.target.value);
     setCharsRemaining(21 - event.target.value.length);
@@ -40,6 +43,34 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
 
   const onCommunityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     SetCommunityType(event.target.name);
+  };
+
+  const handeCreateCommunnity = async () => {
+    const format = /[`!@#$%^&*()_+`<>?>{}|"]/;
+
+    try {
+      if (format.test(communityname) || communityname.length > 3) {
+        setEroor(
+          "invalid name the lentgth most be more than 3 characters and dont have special characters"
+        );
+      }
+
+      const communityDocRef = doc(firestore, "communities", communityname);
+
+      const communityDoc = await getDoc(communityDocRef);
+
+      if (communityDoc.exists()) {
+        throw new Error(`sorry,r/{communityname} is already taken,Try another`);
+      }
+      await setDoc(communityDocRef, {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp,
+        numberOfmembers: 1,
+        privacyType: communityType,
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
   };
 
   return (
@@ -89,6 +120,9 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
                 color={charsRemaining === 0 ? "red" : "gray.300"}
               >
                 {charsRemaining} Characters remaining
+              </Text>
+              <Text fontSize="9pt" color="red" pt={1}>
+                {error}
               </Text>
               <Box my={4}>
                 <Text fontWeight={600} fontSize={15}>
@@ -155,7 +189,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
             >
               Cancel
             </Button>
-            <Button height="30px" onClick={() => {}}>
+            <Button height="30px" onClick={handeCreateCommunnity}>
               Create Community
             </Button>
           </ModalFooter>
