@@ -46,12 +46,12 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   };
 
   const handeCreateCommunnity = async () => {
-    const format = /[`!@#$%^&*()_+`<>?>{}|"]/;
+    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
 
     try {
-      if (format.test(communityname) || communityname.length > 3) {
-        setEroor(
-          "invalid name the lentgth most be more than 3 characters and dont have special characters"
+      if (format.test(communityname) || communityname.length < 3) {
+        return setEroor(
+          "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores."
         );
       }
 
@@ -64,7 +64,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
       }
       await setDoc(communityDocRef, {
         creatorId: user?.uid,
-        createdAt: serverTimestamp,
+        createdAt: serverTimestamp(),
         numberOfmembers: 1,
         privacyType: communityType,
       });
@@ -75,7 +75,11 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
 
   return (
     <>
-      <Modal isOpen={open} onClose={handleClose} size="lg">
+      <Modal
+        isOpen={open}
+        onClose={handleClose}
+        size={{ base: "lg", lg: "2xl" }}
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader
@@ -89,35 +93,31 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
 
           <Box px={3}>
             <ModalCloseButton />
-            <ModalBody
-              border="1px solid red"
-              display="flex"
-              flexDirection="column"
-              py={3}
-            >
+            <ModalBody display="flex" flexDirection="column" py={3}>
               <Text fontWeight={600}>Name</Text>
-              <Text fontSize={11} color="gray.100">
+              <Text fontSize={11} color="gray.500">
                 Community names including capitalization connot be change
               </Text>
               <Text
                 color="gray.400"
                 position="relative"
                 top="28px"
-                left="22px"
+                left="10px"
                 width="20px"
               >
                 r/
               </Text>
               <Input
                 position="relative"
+                name="name"
                 onChange={handleChange}
-                pl={22}
-                value={communityname}
+                pl="22px"
+                type={""}
                 size="sm"
               />
               <Text
                 fontSize="9pt"
-                color={charsRemaining === 0 ? "red" : "gray.300"}
+                color={charsRemaining === 0 ? "red" : "gray.500"}
               >
                 {charsRemaining} Characters remaining
               </Text>
