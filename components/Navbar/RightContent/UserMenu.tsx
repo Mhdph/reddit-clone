@@ -17,15 +17,21 @@ import { VscAccount } from "react-icons/vsc";
 import { MdOutlineLogin } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { auth } from "../../../firebase/clientApp";
-import { useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { authModalState } from "../../../atoms/authModalAtom";
+import { CommunityState } from "../../../atoms/communitiesAtom";
 
 type UserMenuProps = {
   user?: User | null;
 };
-
 const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
   const setAuthModalState = useSetRecoilState(authModalState);
+  const resetCommunityState = useResetRecoilState(CommunityState);
+
+  const logOut = async () => {
+    await signOut(auth);
+    resetCommunityState();
+  };
 
   return (
     <Menu>
@@ -80,7 +86,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
             </MenuItem>
             <MenuDivider />
             <MenuItem
-              onClick={() => signOut(auth)}
+              onClick={logOut}
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
